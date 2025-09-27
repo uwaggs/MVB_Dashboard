@@ -1,5 +1,6 @@
 library(dplyr)
 library(arrow)
+library(ggplot2)
 
 
 add_season_date <- function(data) {
@@ -168,6 +169,52 @@ team_season_top_players <- function(data, select_team, select_season, select_ski
 }
 
 #--------------------------
+
+
+#--------------------------
+
+zone_frequency <- function(data, select_team, select_season, select_skill, select_setter_position) {
+  # this function provides a heatmap of where the team's ball land
+  # for a given skill (Attack, Serve, Reception, Set)
+  # can specify by rotation (defined by the setter position).
+  # note that one may select more than one setter position for aggregate result. 
+  
+  zone_coords <- data.frame(
+    end_zone = c(4,3,2,7,8,9,5,6,1),
+    x = c(1,2,3,1,2,3,1,2,3),   # left=1, center=2, right=3
+    y = c(3,3,3,2,2,2,1,1,1)    # top=3, middle=2, bottom=1
+  )
+  
+  serve_coords = data %>%
+    filter(team == select_team & season == select_season & skill == select_skill 
+           & setter_position %in% select_setter_position) %>%
+    group_by(end_zone) %>%
+    summarise(attempts = n()) %>%
+    mutate(rate = attempts / sum(attempts)) %>%
+    right_join(zone_coords, by = "end_zone") %>%
+    tidyr::replace_na(list(attempts = 0, rate = 0))  # fill in missing zones with 0
+  
+  ggplot(serve_coords, aes(x = x, y = y, fill = rate)) +
+    geom_tile(color = "black", size = 0.5) +   # draw court squares
+    geom_text(aes(label = paste0("Zone ", end_zone, "\n", attempts, " (", round(rate*100,1), "%)")), 
+              data = serve_coords, color="black", size=5) +
+    scale_fill_gradient(low = "white", high = "red") +
+    # Add court outline
+    geom_rect(aes(xmin = 0.5, xmax = 3.5, ymin = 0.5, ymax = 3.5),
+              fill = NA, color = "black", size = 1) +
+    #scale_x_continuous(breaks = 1:3, labels = c("Left", "Center", "Right")) +
+    #scale_y_continuous(breaks = 1:3, labels = c("Back", "Middle", "Front")) +
+    coord_fixed() +
+    labs(fill = NULL, x = NULL, y = NULL) +
+    theme_minimal(base_size = 14) + 
+    theme(axis.ticks = element_blank(),
+          axis.text = element_blank(),
+          panel.grid = element_blank()) 
+}
+
+
+
+#--------------------------
 # tests - need to put them here so that they don't run when sourced in server.R
 if (sys.nframe() == 0) {
   
@@ -187,6 +234,12 @@ if (sys.nframe() == 0) {
   team_season_stat_table(df, "M-WATERLOO WARRIORS", "2024-2025")
   
   team_season_top_players(df, "M-WATERLOO WARRIORS", "2024-2025", "Block")
+  
+  # plot for set is bit off - too much in the middle. is this normal? 
+  zone_frequency(df, "W-WATERLOO WARRIORS", "2024-2025", "Set", c(1,5,6))
+  
+  
+  zone_frequency(df, "W-WATERLOO WARRIORS", "2024-2025", "Serve", c(1,5,6))
   
 }
 #-------------------------

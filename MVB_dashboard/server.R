@@ -74,6 +74,25 @@ function(input, output, session) {
     season_top_players()
   }, bordered = TRUE, align = "c", digits = 1)
   
+  # Serve and Reception zone frequency------------------------------------------------------
+  season_serve_zone_freq = reactive({
+    req(input$season_overview_team, input$season_overview_season)
+    zone_frequency(data, input$season_overview_team, input$season_overview_season, "Serve", input$serve_rotation)
+  })
+  season_reception_zone_freq = reactive({
+    req(input$season_overview_team, input$season_overview_season)
+    zone_frequency(data, input$season_overview_team, input$season_overview_season, "Reception", input$reception_rotation)
+  })
+  output$serve_zone_plot <- renderPlot({
+    #req(season_serve_zone_freq())
+    season_serve_zone_freq()
+  })
+  output$reception_zone_plot <- renderPlot({
+    #req(season_reception_zone_freq())
+    season_reception_zone_freq()
+  })
+  
+  
   # Best and Worst Rotation text-----------------------------------------------
   best_rotation <- list(rot = 3, points = 18)
   worst_rotation <- list(rot = 6, points = 22)

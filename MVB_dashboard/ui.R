@@ -57,11 +57,22 @@ dashboardPage(
                 )
               ),
               fluidRow(
-                box(title = "Best Rotation", status = "success", solidHeader = TRUE, width = 6,
-                    textOutput("best_rotation")
+                box(title = "Reception Zone", status = "info", solidHeader = TRUE, width = 6,
+                    selectInput("reception_rotation", "Select Rotation (by Setter Position):", 
+                                choices = c(1,2,3,4,5,6), 
+                                selected = c(1,2,3,4,5,6),
+                                multiple = TRUE),
+                    plotOutput("reception_zone_plot"),
+                    br(),
+                    div(p("The heatmap shows the relative frequency of where the opponent's serves are typically received."))
                 ),
-                box(title = "Worst Rotation", status = "danger", solidHeader = TRUE, width = 6,
-                    textOutput("worst_rotation")
+                box(title = "Serve Zone", status = "info", solidHeader = TRUE, width = 6,
+                    selectInput("serve_rotation", "Select Rotation (by Setter Position):", 
+                                choices = c(1,2,3,4,5,6), 
+                                selected = c(1,2,3,4,5,6),
+                                multiple = TRUE),
+                    plotOutput("serve_zone_plot"),
+                    div(p("The heatmap shows the relative frequency of where serves typically land on the opponent's court."))
                 )
               )
       ),
