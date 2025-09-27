@@ -1,4 +1,37 @@
-.Rproj.user
+# R / RStudio
 .Rhistory
 .RData
 .Ruserdata
+.Rproj.user
+.Rapp.history
+
+# Shiny / Data
+*.csv
+*.tsv
+*.rds
+*.RData
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python (if you have any Python scripts in the project)
+__pycache__/
+*.pyc
+
+# Git
+.gitignore
+
+# Package / Environment files
+renv/library/
+renv/python/
+renv.lock
+
+# Other IDEs / Editors
+*.swp
+*.swo
+*.bak
