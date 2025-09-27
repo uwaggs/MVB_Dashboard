@@ -38,7 +38,7 @@ function(input, output, session) {
     )
   })
   
-  # reactive values for team summary
+  # Summary Statistics table--------------------------------------------------
   
   season_game_count = reactive({
     team_season_summary_table(data, input$season_overview_team, input$season_overview_season)
@@ -50,22 +50,34 @@ function(input, output, session) {
     season_game_count()$games_lost
   })
   
-  season_summary_stat = reactive({
-    team_season_stat_table(data, input$season_overview_team, input$season_overview_season)
-  })
-  
-  best_rotation <- list(rot = 3, points = 18)
-  worst_rotation <- list(rot = 6, points = 22)
-  
   # win loss
   output$win_loss <- renderText({
     paste("W:", wins(), " - L:", losses())
+  })
+  
+  season_summary_stat = reactive({
+    team_season_stat_table(data, input$season_overview_team, input$season_overview_season)
   })
   
   # Summary table
   output$summary_table <- renderTable({
     season_summary_stat()
   }, bordered = TRUE, align = "c", digits = 1)
+  
+  # Season Top Player table----------------------------------------------------
+  season_top_players = reactive({
+    req(input$season_overview_team, input$season_overview_season, input$top_players_skill)
+    team_season_top_players(data, input$season_overview_team, input$season_overview_season, input$top_players_skill)
+  })
+  
+  output$top_players_table <- renderTable({
+    season_top_players()
+  }, bordered = TRUE, align = "c", digits = 1)
+  
+  # Best and Worst Rotation text-----------------------------------------------
+  best_rotation <- list(rot = 3, points = 18)
+  worst_rotation <- list(rot = 6, points = 22)
+  
   
   # Bottom text
   output$rotation_text <- renderUI({

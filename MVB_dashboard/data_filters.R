@@ -94,6 +94,8 @@ team_season_stat_table <- function(data, select_team, select_season) {
   # Reception: Perfect or Positive Reception (# or +), Error (=), Other
   # Serve: Ace (#), Error (=), Other
   # evaluation code can be retrieved by looking at all unique combinations of skill, evaluation_code, and evaluation in the data
+  # it requires that date and season columns are already added to data
+  
   data %>%
     filter(team == select_team & season == select_season) %>%
     filter(skill %in% c("Attack", "Block", "Serve", "Reception","Dig")) %>%
@@ -127,6 +129,45 @@ team_season_stat_table <- function(data, select_team, select_season) {
 }
 
 #--------------------------
+
+team_season_top_players <- function(data, select_team, select_season, select_skill) {
+  # this function provides a list of top 5 players for a given skill and their 
+  # success, error and other # for the selected team and season.
+  # it requires that date and season columns are already added to data
+  data %>%
+    filter(team == select_team & season == select_season & skill == select_skill) %>%
+    group_by(player_name) %>%
+    summarise(
+      attempts = n(),
+      success = sum((skill == "Attack" & evaluation_code == "#") |
+                      (skill == "Block" & evaluation_code == "#") |
+                      (skill == "Serve" & evaluation_code == "#") |
+                      (skill == "Reception" & evaluation_code %in% c("+", "#")) |
+                      (skill == "Dig" & evaluation_code %in% c("+", "#"))
+      ),
+      errors = sum(evaluation_code == "="),
+      success_pct = round(100 * success / attempts, 1),
+      error_pct = round(100 * errors / attempts, 1)
+    ) %>%
+    select(player_name, attempts, success, success_pct, errors, error_pct) %>%
+    arrange(desc(success)) %>%
+    # add other # and other %
+    mutate(other = attempts - success - errors,
+           other_pct = round(100 * other / attempts, 1)) %>%
+    select(player_name, success, success_pct, errors, error_pct) %>%
+    # combine the # and % columns to show % (#)
+    mutate(
+      success_combined = paste0(success," (", success_pct, "%)"),
+      errors_combined = paste0(errors, " (", error_pct, "%)")
+    ) %>%
+    rename(Player = player_name,
+           `Success` = success_combined,
+           `Error` = errors_combined) %>%
+    select(Player, Success, Error) %>%
+    slice_head(n = 5)
+}
+
+#--------------------------
 # tests - need to put them here so that they don't run when sourced in server.R
 if (sys.nframe() == 0) {
   
@@ -144,6 +185,8 @@ if (sys.nframe() == 0) {
   team_season_summary_table(df, "M-WATERLOO WARRIORS", "2024-2025")
   
   team_season_stat_table(df, "M-WATERLOO WARRIORS", "2024-2025")
+  
+  team_season_top_players(df, "M-WATERLOO WARRIORS", "2024-2025", "Block")
   
 }
 #-------------------------

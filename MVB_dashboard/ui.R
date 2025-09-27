@@ -16,7 +16,10 @@ dashboardPage(
   dashboardHeader(title = "Waterloo Warriors MVB Dashboard"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Season Overview", tabName = "season_overview", icon = icon("dashboard"))
+      menuItem("Season Overview", tabName = "season_overview", icon = icon("dashboard")),
+      menuItem("Compare Teams", tabName = "comp_teams", icon = icon("dashboard")),
+      menuItem("Game Analysis", tabName = "game_analysis", icon = icon("dashboardd")),
+      menuItem("Player Analysis", tabName = "player_analysis", icon = icon("dashboa"))
     )
   ),
   dashboardBody(
@@ -38,6 +41,19 @@ dashboardPage(
                     br(),
                     div(p("We define Success as an attempt that earns a point (for attack, block, and serve) or 
                                  results in a good pass (for reception and dig), and Error as an attempt that loses a point."))
+                ),
+                box(title = "Top Players", status = "info", solidHeader = TRUE, width = 4,
+                    # select input here is NOT WORKING! the table does not change when i change my skill input
+                    selectInput("top_players_skill", "Select Skill:", 
+                                choices = c("Attack", 
+                                            "Block", 
+                                            "Serve", 
+                                            "Reception", 
+                                            "Dig"), 
+                                selected = "Attack"),
+                    tableOutput("top_players_table"),
+                    br(),
+                    div(p("The players are ranked by the number of successful attempts of the selected skills."))
                 )
               ),
               fluidRow(
@@ -48,16 +64,13 @@ dashboardPage(
                     textOutput("worst_rotation")
                 )
               )
-      )
-    ),
-    tabItem(tabName = "comp",
-            h3("Competition Analysis (placeholder)")
-    ),
-    tabItem(tabName = "game",
-            h3("Game Analysis (placeholder)")
-    ),
-    tabItem(tabName = "player",
-            h3("Player Analysis (placeholder)")
+      ),
+      tabItem(tabName = "comp_teams",
+              h2("Compare Team Stats")),
+      tabItem(tabName = "game_analysis",
+              h2("Game Analysis")),
+      tabItem(tabName = "player_analysis",
+              h2("Player Analysis"))
     )
   )
 )
