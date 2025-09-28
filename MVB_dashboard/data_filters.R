@@ -195,7 +195,7 @@ zone_frequency <- function(data, select_team, select_season, select_skill, selec
     tidyr::replace_na(list(attempts = 0, rate = 0))  # fill in missing zones with 0
   
   ggplot(serve_coords, aes(x = x, y = y, fill = rate)) +
-    geom_tile(color = "black", size = 0.5) +   # draw court squares
+    geom_tile(color = "black", linewidth = 0.5) +   # draw court squares
     geom_text(aes(label = paste0("Zone ", end_zone, "\n", attempts, " (", round(rate*100,1), "%)")), 
               data = serve_coords, color="black", size=5) +
     scale_fill_gradient(low = "white", high = "red") +

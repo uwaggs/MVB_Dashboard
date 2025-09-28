@@ -1,0 +1,13 @@
+name: MVB_dashboard
+title: MVB_dashboard
+username: kmshimshiny
+account: kmshimshiny
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15585953
+bundleId: 10962579
+url: https://kmshimshiny.shinyapps.io/MVB_dashboard/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: full_data_5_games.csv

@@ -16,10 +16,10 @@ dashboardPage(
   dashboardHeader(title = "Waterloo Warriors MVB Dashboard"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Season Overview", tabName = "season_overview", icon = icon("dashboard")),
-      menuItem("Compare Teams", tabName = "comp_teams", icon = icon("dashboard")),
-      menuItem("Game Analysis", tabName = "game_analysis", icon = icon("dashboardd")),
-      menuItem("Player Analysis", tabName = "player_analysis", icon = icon("dashboa"))
+      menuItem("Season Overview", tabName = "season_overview", icon = icon("volleyball")),
+      menuItem("Compare Teams", tabName = "comp_teams", icon = icon("down-left-and-up-right-to-center")),
+      menuItem("Game Analysis", tabName = "game_analysis", icon = icon("trophy")),
+      menuItem("Player Analysis", tabName = "player_analysis", icon = icon("users"))
     )
   ),
   dashboardBody(
@@ -58,19 +58,25 @@ dashboardPage(
               ),
               fluidRow(
                 box(title = "Reception Zone", status = "info", solidHeader = TRUE, width = 6,
-                    selectInput("reception_rotation", "Select Rotation (by Setter Position):", 
-                                choices = c(1,2,3,4,5,6), 
-                                selected = c(1,2,3,4,5,6),
-                                multiple = TRUE),
+                    strong("Select Rotation (by Setter Position)"),
+                    div(
+                      style = "height: 100px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;",
+                      checkboxGroupInput("reception_rotation", NULL, 
+                                  choices = c(1,2,3,4,5,6), 
+                                  selected = c(1,2,3,4,5,6))
+                      ),
                     plotOutput("reception_zone_plot"),
                     br(),
                     div(p("The heatmap shows the relative frequency of where the opponent's serves are typically received."))
                 ),
                 box(title = "Serve Zone", status = "info", solidHeader = TRUE, width = 6,
-                    selectInput("serve_rotation", "Select Rotation (by Setter Position):", 
-                                choices = c(1,2,3,4,5,6), 
-                                selected = c(1,2,3,4,5,6),
-                                multiple = TRUE),
+                    strong("Select Rotation (by Setter Position)"),
+                    div(
+                      style = "height: 100px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;",
+                      checkboxGroupInput("serve_rotation", NULL, 
+                                         choices = c(1,2,3,4,5,6), 
+                                         selected = c(1,2,3,4,5,6))
+                    ),
                     plotOutput("serve_zone_plot"),
                     div(p("The heatmap shows the relative frequency of where serves typically land on the opponent's court."))
                 )
