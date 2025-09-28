@@ -53,7 +53,7 @@ dashboardPage(
                                 selected = "Attack"),
                     tableOutput("top_players_table"),
                     br(),
-                    div(p("The players are ranked by the number of successful attempts of the selected skills."))
+                    div(p("The players are ranked by the number of successful attempts of the selected skills. The percentages denote the number of attempts proportional to the total number of attempts."))
                 )
               ),
               fluidRow(
